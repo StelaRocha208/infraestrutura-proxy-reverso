@@ -1,15 +1,26 @@
 server {
+
+    # Define a porta 80 para receber requisições HTTP e IP da máquina onde está o Nginx
     listen 80;
     listen [::]:80;
 
     server_name 192.168.56.10;
 
+    # Define como as requisições serão tratadas
     location / {
+        # Encaminha as requisições para a API na VM2
         proxy_pass http://192.168.56.11:8080;
 
+        # Envia o nome do host original
         proxy_set_header Host $host;
+
+        # Informa o IP original do cliente
         proxy_set_header X-Real-IP $remote_addr;
+
+        # Mantém o histórico de IPs pelos quais a requisição passou
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Informa o protocolo utilizado na requisição HTTP e HTTPS
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
